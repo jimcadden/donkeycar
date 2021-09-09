@@ -13,8 +13,10 @@ print(cfg.CAMERA_RESOLUTION)
 """
 
 
-from donkeycar.parts.tachometer import Tachometer
 import os
+
+from donkeycar.parts.tachometer import TachometerMode
+
 
 #PATHS
 CAR_PATH = PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -289,8 +291,6 @@ HBRIDGE_L298N_PIN_RIGHT_BWD = "RPI_GPIO.BOARD.13" # TTL output pin enables right
 HBRIDGE_L298N_PIN_RIGHT_EN = "RPI_GPIO.BOARD.11"  # PWM pin generates duty cycle for right wheel speed
 
 #ODOMETRY
-from donkeycar.parts.tachometer import TachometerMode
-
 HAVE_ODOM = False               # Do you have an odometer/encoder 
 ENCODER_TYPE = 'GPIO'           # What kind of encoder? GPIO|arduino|Astar.  
                                 # - 'GPIO' refers to direct connect of a single-channel encoder to an RPi/Jetson GPIO header pin.  
