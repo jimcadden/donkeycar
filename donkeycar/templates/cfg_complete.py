@@ -13,6 +13,7 @@ print(cfg.CAMERA_RESOLUTION)
 """
 
 import os
+import math
 
 #PATHS
 CAR_PATH = PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -47,6 +48,22 @@ USE_SSD1306_128_32 = False    # Enable the SSD_1306 OLED Display
 SSD1306_128_32_I2C_ROTATION = 0 # 0 = text is right-side up, 1 = rotated 90 degrees clockwise, 2 = 180 degrees (flipped), 3 = 270 degrees
 SSD1306_RESOLUTION = 1 # 1 = 128x32; 2 = 128x64
 
+# MEASURED ROBOT PROPERTIES
+AXLE_LENGTH = 0.03     # length of axle; distance between left and right wheels in meters
+WHEEL_BASE = 0.1       # distance between front and back wheels in meters
+WHEEL_RADIUS = 0.0315  # radius of wheel in meters
+MIN_SPEED = 0.1        # minimum speed in meters per second; speed below which car stalls
+MAX_SPEED = 3.0        # maximum speed in meters per second; speed at maximum throttle (1.0)
+MIN_THROTTLE = 0.1     # throttle (0 to 1.0) that corresponds to MIN_SPEED, throttle below which car stalls
+MAX_STEERING_ANGLE = math.pi / 4  # for car-like robot; maximum steering angle in radians (corresponding to tire angle at steering == -1)
+
+#DRIVETRAIN
+#These options specify which chasis and motor setup you are using. Most are using I2C_SERVO.
+#DC_STEER_THROTTLE uses HBridge pwm to control one steering dc motor, and one drive wheel motor
+#DC_TWO_WHEEL uses HBridge pwm to control two drive motors, one on the left, and one on the right.
+#SERVO_HBRIDGE_PWM use ServoBlaster to output pwm control from the PiZero directly to control steering, and HBridge for a drive motor.
+#PIGPIO_PWM uses Raspberrys internal PWM
+DRIVE_TRAIN_TYPE = "I2C_SERVO" # I2C_SERVO|DC_STEER_THROTTLE|DC_TWO_WHEEL|DC_TWO_WHEEL_L298N|SERVO_HBRIDGE_PWM|PIGPIO_PWM|MM1|MOCK
 #
 # DRIVE_TRAIN_TYPE
 # These options specify which chasis and motor setup you are using.
@@ -81,8 +98,6 @@ PWM_STEERING_INVERTED = False  # True if hardware requires an inverted PWM pulse
 PWM_THROTTLE_PIN = "PCA9685.1:40.0"  # PWM output pin for ESC
 PWM_THROTTLE_SCALE = 1.0   # used to compensate for PWM frequence differences from 60hz; NOT for increasing/limiting speed
 PWM_THROTTLE_INVERTED = False  # True if hardware requires an inverted PWM pulse
-
-AXLE_LENGTH = 0.3  # length of axle; distance between wheels in meters
 
 #STEERING
 STEERING_CHANNEL = 1            #channel on the 9685 pwm board 0-15
@@ -347,7 +362,7 @@ DEFAULT_AI_FRAMEWORK = 'tensorflow'
 # time. This chooses between different neural network designs. You can
 # override this setting by passing the command line parameter --type to the
 # python manage.py train and drive commands.
-# tensorflow models: (linear|categorical|tflite_linear|tensorrt_linear)
+# tensorflow models: (linear|categorical|tflite_linear|tensorrt_linear|linear_velocity)
 # pytorch models: (resnet18)
 DEFAULT_MODEL_TYPE = 'linear'
 BATCH_SIZE = 128                #how many records to use when doing one pass of gradient decent. Use a smaller number if your gpu is running out of memory.
