@@ -57,13 +57,6 @@ MAX_SPEED = 3.0        # maximum speed in meters per second; speed at maximum th
 MIN_THROTTLE = 0.1     # throttle (0 to 1.0) that corresponds to MIN_SPEED, throttle below which car stalls
 MAX_STEERING_ANGLE = math.pi / 4  # for car-like robot; maximum steering angle in radians (corresponding to tire angle at steering == -1)
 
-#DRIVETRAIN
-#These options specify which chasis and motor setup you are using. Most are using I2C_SERVO.
-#DC_STEER_THROTTLE uses HBridge pwm to control one steering dc motor, and one drive wheel motor
-#DC_TWO_WHEEL uses HBridge pwm to control two drive motors, one on the left, and one on the right.
-#SERVO_HBRIDGE_PWM use ServoBlaster to output pwm control from the PiZero directly to control steering, and HBridge for a drive motor.
-#PIGPIO_PWM uses Raspberrys internal PWM
-DRIVE_TRAIN_TYPE = "I2C_SERVO" # I2C_SERVO|DC_STEER_THROTTLE|DC_TWO_WHEEL|DC_TWO_WHEEL_L298N|SERVO_HBRIDGE_PWM|PIGPIO_PWM|MM1|MOCK
 #
 # DRIVE_TRAIN_TYPE
 # These options specify which chasis and motor setup you are using.
@@ -99,8 +92,6 @@ PWM_THROTTLE_PIN = "PCA9685.1:40.0"  # PWM output pin for ESC
 PWM_THROTTLE_SCALE = 1.0   # used to compensate for PWM frequence differences from 60hz; NOT for increasing/limiting speed
 PWM_THROTTLE_INVERTED = False  # True if hardware requires an inverted PWM pulse
 
-#STEERING
-STEERING_CHANNEL = 1            #channel on the 9685 pwm board 0-15
 
 #STEERING FOR PWM_STEERING_THROTTLE (and deprecated I2C_SERVO)
 STEERING_CHANNEL = 1            #(deprecated) channel on the 9685 pwm board 0-15
@@ -306,21 +297,21 @@ HBRIDGE_L298N_PIN_RIGHT_BWD = "RPI_GPIO.BOARD.13" # TTL output pin enables right
 HBRIDGE_L298N_PIN_RIGHT_EN = "RPI_GPIO.BOARD.11"  # PWM pin generates duty cycle for right wheel speed
 
 #ODOMETRY
-HAVE_ODOM = False               # Do you have an odometer/encoder 
+HAVE_ODOM = False               # Do you have an odometer/encoder
 HAVE_ODOM_2 = False             # Do you have a second odometer/encoder as in a differential drive robot.
                                 # In this case, the 'first' encoder is the left wheel encoder and
                                 # the second encoder is the right wheel encoder.
 ENCODER_TYPE = 'GPIO'           # What kind of encoder? GPIO|arduino.
-                                # - 'GPIO' refers to direct connect of a single-channel encoder to an RPi/Jetson GPIO header pin.  
+                                # - 'GPIO' refers to direct connect of a single-channel encoder to an RPi/Jetson GPIO header pin.
                                 #   Set ODOM_PIN to the gpio pin, based on board numbering.
-                                # - 'arduino' generically refers to any microcontroller connected over a serial port.  
+                                # - 'arduino' generically refers to any microcontroller connected over a serial port.
                                 #   Set ODOM_SERIAL to the serial port that connects the microcontroller.
-                                #   See 'arduino/encoder/encoder.ino' for an Arduino sketch that implements both a continuous and 
+                                #   See 'arduino/encoder/encoder.ino' for an Arduino sketch that implements both a continuous and
                                 #    on demand protocol for sending readings from the microcontroller to the host.
-ENCODER_PPR = 20                # encoder's pulses (ticks) per revolution of encoder shaft.  
-ENCODER_DEBOUNCE_NS = 0         # nanoseconds to wait before integrating subsequence encoder pulses.  
+ENCODER_PPR = 20                # encoder's pulses (ticks) per revolution of encoder shaft.
+ENCODER_DEBOUNCE_NS = 0         # nanoseconds to wait before integrating subsequence encoder pulses.
                                 # For encoders with noisy transitions, this can be used to reject extra interrupts caused by noise.
-                                # If necessary, the exact value can be determined using an oscilliscope or logic analyzer or 
+                                # If necessary, the exact value can be determined using an oscilliscope or logic analyzer or
                                 # simply by experimenting with various values.
 FORWARD_ONLY = 1
 FORWARD_REVERSE = 2
@@ -329,13 +320,13 @@ TACHOMETER_MODE=FORWARD_ONLY    # FORWARD_ONLY, FORWARD_REVERSE or FORWARD_REVER
                                 # For dual channel quadrature encoders, 'FORWARD_ONLY' is always the correct mode.
                                 # For single-channel encoders, the tachometer mode depends upon the application.
                                 # - FORWARD_ONLY always increments ticks; effectively assuming the car is always moving forward
-                                #   and always has a positive throttle. This is best for racing on wide open circuits where 
+                                #   and always has a positive throttle. This is best for racing on wide open circuits where
                                 #   the car is always under throttle and where we are not trying to model driving backwards or stopping.
                                 # - FORWARD_REVERSE uses the throttle value to decide if the car is moving forward or reverse
-                                #   increments or decrements ticks accordingly.  In the case of a zero throttle, ticks will be 
+                                #   increments or decrements ticks accordingly.  In the case of a zero throttle, ticks will be
                                 #   incremented or decremented based on the last non-zero throttle; effectively modelling 'coasting'.
-                                #   This can work well in situations where the car will be making progress even when the throttle 
-                                #   drops to zero.  For instance, in a race situatino where the car may coast to slow down but not 
+                                #   This can work well in situations where the car will be making progress even when the throttle
+                                #   drops to zero.  For instance, in a race situatino where the car may coast to slow down but not
                                 #   actually stop.
                                 # - FORWARD_REVERSE_STOP uses the throttle value to decide if the car is moving forward or reverse or stopped.
                                 #   This works well for a slower moving robot in situations where the robot is changing direction; for instance4
