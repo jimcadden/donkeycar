@@ -1086,12 +1086,6 @@ def add_drivetrain(V, cfg):
                 pins.pwm_pin_by_id(cfg.HBRIDGE_PIN_RIGHT_FWD), 
                 pins.pwm_pin_by_id(cfg.HBRIDGE_PIN_RIGHT_BWD))
 
-            two_wheel_control = actuator.TwoWheelSteeringThrottle()
-
-            V.add(two_wheel_control,
-                    inputs=['throttle', 'angle'],
-                    outputs=['left_motor_speed', 'right_motor_speed'])
-
             V.add(left_motor, inputs=['left_motor_speed'])
             V.add(right_motor, inputs=['right_motor_speed'])
 
@@ -1104,12 +1098,6 @@ def add_drivetrain(V, cfg):
                 pins.output_pin_by_id(cfg.HBRIDGE_L298N_PIN_RIGHT_FWD), 
                 pins.output_pin_by_id(cfg.HBRIDGE_L298N_PIN_RIGHT_BWD), 
                 pins.pwm_pin_by_id(cfg.HBRIDGE_L298N_PIN_RIGHT_EN))
-
-            two_wheel_control = actuator.TwoWheelSteeringThrottle()
-
-            V.add(two_wheel_control,
-                    inputs=['throttle', 'angle'],
-                    outputs=['left_motor_speed', 'right_motor_speed'])
 
             V.add(left_motor, inputs=['left_motor_speed'])
             V.add(right_motor, inputs=['right_motor_speed'])
