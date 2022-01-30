@@ -1086,8 +1086,8 @@ def add_drivetrain(V, cfg):
                 pins.pwm_pin_by_id(cfg.HBRIDGE_PIN_RIGHT_FWD), 
                 pins.pwm_pin_by_id(cfg.HBRIDGE_PIN_RIGHT_BWD))
 
-            V.add(left_motor, inputs=['left_motor_speed'])
-            V.add(right_motor, inputs=['right_motor_speed'])
+            V.add(left_motor, inputs=['left/throttle'])
+            V.add(right_motor, inputs=['right/throttle'])
 
         elif cfg.DRIVE_TRAIN_TYPE == "DC_TWO_WHEEL_L298N":
             left_motor = actuator.L298N_HBridge_3pin(
@@ -1099,8 +1099,8 @@ def add_drivetrain(V, cfg):
                 pins.output_pin_by_id(cfg.HBRIDGE_L298N_PIN_RIGHT_BWD), 
                 pins.pwm_pin_by_id(cfg.HBRIDGE_L298N_PIN_RIGHT_EN))
 
-            V.add(left_motor, inputs=['left_motor_speed'])
-            V.add(right_motor, inputs=['right_motor_speed'])
+            V.add(left_motor, inputs=['left/throttle'])
+            V.add(right_motor, inputs=['right/throttle'])
 
         elif cfg.DRIVE_TRAIN_TYPE == "SERVO_HBRIDGE_2PIN":
             #
