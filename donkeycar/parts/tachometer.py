@@ -5,12 +5,8 @@ from typing import Tuple
 
 from donkeycar.utilities.platform import is_jetson
 from donkeycar.utilities.serial_port import SerialPort
+from donkeycar.parts.pins import InputPin, PinEdge
 
-# import correct GPIO library
-if is_jetson():
-    import Jetson.GPIO as GPIO
-else:
-    import RPi.GPIO as GPIO
 
 logger = logging.getLogger("donkeycar.parts.tachometer")
 
@@ -230,22 +226,29 @@ class EncoderChannel(AbstractEncoder):
 
 
 class GpioEncoder(AbstractEncoder):
-    def __init__(self, gpio_pin, debounce_ns:int=0, debug=False):
+    """
+    An single-channel encoder read using an InputPin
+    :gpio_pin: InputPin that will get the signal
+    :debounce_ns: int number of nano seconds before accepting another 
+                  encoder signal.  This is used to ignore bounces.
+    :debug: bool True to output extra logging
+    """
+    def __init__(self, gpio_pin: InputPin, debounce_ns:int=0, debug=False):
         # validate gpio_pin
-        if not 1 <= gpio_pin <= 40:
-            raise ValueError('The pin number must be BCM (Broadcom) pin within the range [1, 40].')
+        if gpio_pin is None:
+            raise ValueError('The encoder input pin must be a valid InputPin.')
 
         self.counter = 0
         self.direction = 0
         self.pin = gpio_pin
-        self.pi = None
-        self.cb = None
         self.debounce_ns:int = debounce_ns
         self.debounce_time:int = 0
 
-    def _cb(self, _):
+    def _cb(self, pin_number:int, pin_state:int):
         """
         Callback routine called by GPIO when a tick is detected
+        :pin_number: int the pin number that generated the interrupt.
+        :pin_state: int the state of the pin
         """
         now = time.time_ns()
         if now > self.debounce_time:
@@ -254,9 +257,8 @@ class GpioEncoder(AbstractEncoder):
             
     def start_ticks(self):
         # configure GPIO pin
-        GPIO.setmode(GPIO.BCM)  # use broadcom numbering
-        GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(self.pin, GPIO.RISING, callback=self._cb) 
+        self.pin.start(on_input=self._cb, edge=PinEdge.RISING)
+
 
     def poll_ticks(self, direction:int):  
         """
@@ -267,7 +269,7 @@ class GpioEncoder(AbstractEncoder):
         self.direction = direction              
 
     def stop_ticks(self):
-        GPIO.remove_event_detect(self.pin)           
+        self.pin.stop()          
 
     def get_ticks(self, encoder_index:int=0) -> int:
         """
@@ -400,7 +402,8 @@ if __name__ == "__main__":
     from threading import Thread
     import sys
     import time
-    
+    from donkeycar.parts.pins import input_pin_by_id
+
     # parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("-r", "--rate", type=float, default=20,
@@ -415,8 +418,8 @@ if __name__ == "__main__":
                         help="serial-port to open, like '/dev/ttyACM0'")
     parser.add_argument("-b", "--baud-rate", type=int, default=115200, 
                         help="Serial port baud rate")
-    parser.add_argument("-p", "--pin", type=int, default=None,
-                        help="gpio pin that encoder is connected to")  # noqa
+    parser.add_argument("-p", "--pin", type=str, default=None,
+                        help="pin specifier for encoder InputPin, like 'RPI_GPIO.BCM.22'")  # noqa
     parser.add_argument("-dbc", "--debounce-ns", type=int, default=100,
                         help="debounce delay in nanoseconds for reading gpio pin")  # noqa
     parser.add_argument("-db", "--debug", action='store_true', help = "show debug output")
@@ -450,8 +453,8 @@ if __name__ == "__main__":
     if args.baud_rate <= 0:
         help.append("-b/--baud-rate must be > 0")
         
-    if args.pin is not None and args.pin <= 0:
-        help.append("-p/--pint must be > 0 if passed")
+    if args.pin is not None and args.pin == "":
+        help.append("-p/--pin must be non-empty if passed")
 
     if args.debounce_ns < 0:
         help.append("-dbc/--debounce-ns must be greater than zero")
@@ -484,7 +487,7 @@ if __name__ == "__main__":
                 debug=args.debug)
         if args.pin is not None:
             tachometer = Tachometer(
-                encoder=GpioEncoder(gpio_pin=args.pin, debounce_ns=args.debounce_ns, debug=args.debug),
+                encoder=GpioEncoder(gpio_pin=input_pin_by_id(args.pin), debounce_ns=args.debounce_ns, debug=args.debug),
                 ticks_per_revolution=args.pulses_per_revolution, 
                 direction_mode=args.direction_mode,
                 debug=args.debug)
