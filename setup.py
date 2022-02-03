@@ -56,7 +56,7 @@ setup(name='donkeycar',
               'picamera',
               'Adafruit_PCA9685',
               'Adafruit_SSD1306',
-              'RPi.GPIO',
+              'RPi.GPIO==0.7.1a4', # fix for GCC 10 support
               'pyserial',
           ],
           'nano': [
