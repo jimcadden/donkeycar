@@ -55,9 +55,8 @@ setup(name='donkeycar',
           'pi': [
               'picamera',
               'Adafruit_PCA9685',
-              'adafruit-circuitpython-lis3dh',
-              'adafruit-circuitpython-ssd1306',
-              'RPi.GPIO',
+              'Adafruit_SSD1306', #'adafruit-circuitpython-lis3dh', 'adafruit-circuitpython-ssd1306',
+              'RPi.GPIO==0.7.1a4', # fix for GCC 10 support
               'pyserial',
               'imgaug'
           ],
