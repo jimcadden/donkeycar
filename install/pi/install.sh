@@ -7,7 +7,6 @@ sudo dnf update -y
 
 #helpful libraries (2 min)
 sudo dnf install python3-devel python3-distlib python3-setuptools python3-pip python3-wheel -y 
-#? MISSING ON FEDORA: build-essential < MAY NOT BE NECESSARY..? 
 
 sudo dnf install git cmake pkgconfig -y
 sudo dnf install libjpeg-turbo-devel libtiff-devel jasper-devel libpng12-devel -y
@@ -54,4 +53,6 @@ pip install pandas #also installs numpy
 # TensorFlow wheel for arm64: https://github.com/KumaTea/tensorflow-aarch64
 pip install tensorflow -f https://tf.kmtea.eu/whl/stable.html -f https://ext.kmtea.eu/whl/stable.html
 
+# Avoid "ValueError: Unable to determine if this system is a Raspberry Pi"
 pip install git+https://github.com/waveform80/picamera.git
+pip install colorzero

@@ -54,8 +54,9 @@ setup(name='donkeycar',
       extras_require={
           'pi': [
               'Adafruit_PCA9685',
-              'Adafruit_SSD1306', #'adafruit-circuitpython-lis3dh', 'adafruit-circuitpython-ssd1306',
-              'RPi.GPIO==0.7.1a4', # fix for GCC 10 support
+              'adafruit-circuitpython-lis3dh',
+              'adafruit-circuitpython-ssd1306',
+              'RPi.GPIO',
               'pyserial',
               'imgaug'
           ],
