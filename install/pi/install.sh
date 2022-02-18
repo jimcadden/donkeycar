@@ -54,3 +54,4 @@ pip install pandas #also installs numpy
 pip install tensorflow -f https://tf.kmtea.eu/whl/stable.html -f https://ext.kmtea.eu/whl/stable.html
 
 pip install git+https://github.com/waveform80/picamera.git
+pip install colorzero
